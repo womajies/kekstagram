@@ -1,3 +1,3 @@
-# Project «{{Kekstagram}}»
+# Project «Kekstagram»
 
-* Developer: [{{vipdeveloper}}]({{womajies}}).
+* Developer: [https://github.com/womajies/].

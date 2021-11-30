@@ -1,24 +1,32 @@
-import {createPhotos} from './data.js';
+import {openPicturePopup, hiddenCommentCount, hiddenCommentsLoader} from './full-size-picture.js';
 
-const generatePhotos = () => {
-  const templateFragment = document.querySelector('#picture').content;
-  const template = templateFragment.querySelector('.picture');
-  const fragment = document.createDocumentFragment();
-  const pictures = document.querySelector('.pictures');
+const templateFragment = document.querySelector('#picture').content;
+const template = templateFragment.querySelector('.picture');
 
-  const similarPhotos = createPhotos();
-
-  similarPhotos.forEach(({url, likes, comments}) => {
-    const photoElement = template.cloneNode(true);
-    photoElement.href = url;
-    photoElement.querySelector('.picture__img').src = url;
-    photoElement.querySelector('.picture__likes').textContent = likes;
-    photoElement.querySelector('.picture__comments').innerHTML = comments.length;
-    fragment.appendChild(photoElement);
+const generatePhoto = (picture) => {
+  const photoElement = template.cloneNode(true);
+  photoElement.href = picture.url;
+  photoElement.querySelector('.picture__img').src = picture.url;
+  photoElement.querySelector('.picture__likes').textContent = picture.likes;
+  photoElement.querySelector('.picture__comments').innerHTML = picture.comments.length;
+  photoElement.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    openPicturePopup(picture);
+    hiddenCommentCount();
+    hiddenCommentsLoader();
   });
 
-  pictures.appendChild(fragment);
-  return pictures;
+  return photoElement;
 };
 
-export {generatePhotos};
+const generatePhotos = (array) => {
+  const fragment = document.createDocumentFragment();
+
+  array.forEach((el) => {
+    fragment.appendChild(generatePhoto(el));
+  });
+
+  return fragment;
+};
+
+export {generatePhoto, generatePhotos};

@@ -1,3 +1,7 @@
 import {generatePhotos} from './modules/generate-photos.js';
+import {createPhotos} from './modules/data.js';
+import './modules/form.js';
 
-console.log(generatePhotos());
+const similarPhotos = createPhotos();
+const pictures = document.querySelector('.pictures');
+pictures.appendChild(generatePhotos(similarPhotos));

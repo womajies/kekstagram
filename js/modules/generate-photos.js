@@ -1,4 +1,4 @@
-import {openPicturePopup, hiddenCommentCount, hiddenCommentsLoader} from './full-size-picture.js';
+import {openPicturePopup} from './full-size-picture.js';
 
 const templateFragment = document.querySelector('#picture').content;
 const template = templateFragment.querySelector('.picture');
@@ -12,8 +12,6 @@ const generatePhoto = (picture) => {
   photoElement.addEventListener('click', (evt) => {
     evt.preventDefault();
     openPicturePopup(picture);
-    hiddenCommentCount();
-    hiddenCommentsLoader();
   });
 
   return photoElement;

@@ -1,10 +1,8 @@
 import {getRandomPositiveInteger} from '../utils/get-random-positive-integer.js';
-import {checkStringLength} from '../utils/check-string-length.js';
 
-checkStringLength('ahaha', 3);
 
 const SIMILAR_PHOTO_COUNT = 25;
-const COMMENTS_MAX_COUNT = 5;
+const COMMENTS_MAX_COUNT = 20;
 
 const DESCRIPTION = ['Ленивое описание №1', 'Ленивое описание №2', 'Ленивое описание №3', 'Ленивое описание №4', 'Ленивое описание №5', 'Ленивое описание №6'];
 
@@ -45,4 +43,4 @@ const createPhoto = () => ({
 
 const createPhotos = () => new Array(SIMILAR_PHOTO_COUNT).fill(null).map(() => createPhoto());
 
-export {createPhotos};
+export {createPhotos, COMMENTS_MAX_COUNT};

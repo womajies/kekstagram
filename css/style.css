@@ -94,6 +94,14 @@ main {
           transform: translateY(1px);
 }
 
+/**
+ * nouislider styles
+ */
+
+.effect-level__slider {
+  top: 2px;
+}
+
 
 /**
  * Оверлей под экранами

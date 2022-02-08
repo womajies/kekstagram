@@ -88,12 +88,12 @@ const closePicturePopup = () => {
   document.removeEventListener('keydown', onPopupEscKeydown);
 };
 
-function onPopupEscKeydown (evt) {
+const onPopupEscKeydown = (evt) => {
   if (evt.key === 'Escape' && !evt.target.matches('.social__footer-text')) {
     evt.preventDefault();
     closePicturePopup();
   }
-}
+};
 
 const openPicturePopup = (picture) => {
   bigPicture.classList.remove('hidden');

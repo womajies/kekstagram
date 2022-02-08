@@ -1,6 +1,8 @@
-import {inputError, inputErrorReset, checkSimilarHashTag} from '../utils/util.js';
+import {inputError, inputErrorReset, checkSimilarHashTag, destroyFilter, openSuccessMsg, openErrorMsg} from '../utils/util.js';
+import {sendData} from './api.js';
 
 const fileUpload = document.querySelector('#upload-file');
+const uploadForm = document.querySelector('.img-upload__form');
 const fileUploadOverlay = document.querySelector('.img-upload__overlay');
 const hashTagsInput = fileUploadOverlay.querySelector('.text__hashtags');
 const textDescription = fileUploadOverlay.querySelector('.text__description');
@@ -113,9 +115,9 @@ const effectsHandler = (evt) => {
         });
         break;
     }
+
   } else {
-    slider.noUiSlider.destroy();
-    uploadImage.style.filter = 'none';
+    destroyFilter();
   }
 };
 
@@ -130,20 +132,20 @@ const hashTagsHandler = () => {
         inputErrorReset(hashTagsInput);
       }
       if (checkSimilarHashTag(inputHashTagArray, el)) {
-        hashTagsInput.setCustomValidity('Один и тот же хэштег не может быть использован дважды');
+        hashTagsInput.setCustomValidity('Один и тот же хэштег не может быть использован дважды.');
         inputError(hashTagsInput);
       } else if (el.match(/^#$/) && el.length < MIN_HASHTAG_LENGTH) {
-        hashTagsInput.setCustomValidity('Хэштег не может состоять только из одной решётки');
+        hashTagsInput.setCustomValidity('Хэштег не может состоять только из одной решётки.');
       } else if (el.length > MAX_HASHTAG_LENGTH) {
         hashTagsInput.setCustomValidity(
           `Превышена максимальная длина хэштега. 
           Удалите ${el.length - MAX_HASHTAG_LENGTH} символ(-ов).`);
       } else if (el.substr(1, el.length).includes('#')) {
-        hashTagsInput.setCustomValidity('Символ "#" (решётка) может быть только первым по счету в хэштеге');
+        hashTagsInput.setCustomValidity('Символ "#" (решётка) может быть только первым по счету в хэштеге.');
       } else if (el[0] !== '#' && el.length > 0) {
-        hashTagsInput.setCustomValidity('Хэштег должен начинаться с символа # (решётка)');
+        hashTagsInput.setCustomValidity('Хэштег должен начинаться с символа # (решётка).');
       } else if(!el.match(re) && hashTagsInput.value.length > 0) {
-        hashTagsInput.setCustomValidity('Хэштег должен состоять из решётки, букв и чисел');
+        hashTagsInput.setCustomValidity('Хэштег должен состоять из решётки, букв и чисел.');
       } else {
         hashTagsInput.setCustomValidity('');
       }
@@ -173,36 +175,67 @@ const commentHandler = () => {
   textDescription.reportValidity();
 };
 
-const closeUploadPopup = () => {
-  fileUploadOverlay.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  // eslint-disable-next-line no-use-before-define
-  document.removeEventListener('keydown', onUploadEscKeydown);
-  scaleControlSmaller.removeEventListener('click', scaleSmaller);
-  scaleControlBigger.removeEventListener('click', scaleBigger);
-  effectsForm.removeEventListener('change', effectsHandler);
-  hashTagsInput.removeEventListener('input', hashTagsHandler);
-  textDescription.removeEventListener('input', commentHandler);
+const resetForm = () => {
   uploadImage.removeAttribute('class');
   uploadImage.style.filter = 'none';
   fileUpload.value = null;
   hashTagsInput.value = null;
   textDescription.value = null;
   fileUploadOverlay.querySelector('#effect-none').checked = true;
-  inputErrorReset(hashTagsInput);
-  inputErrorReset(textDescription);
+  uploadImage.style.transform = 'scale(1)';
 };
 
-function onUploadEscKeydown (evt) {
+const closeUploadPopup = () => {
+  fileUploadOverlay.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+
+  // eslint-disable-next-line no-use-before-define
+  document.removeEventListener('keydown', onUploadEscKeydown);
+
+  scaleControlSmaller.removeEventListener('click', scaleSmaller);
+  scaleControlBigger.removeEventListener('click', scaleBigger);
+  effectsForm.removeEventListener('change', effectsHandler);
+  hashTagsInput.removeEventListener('input', hashTagsHandler);
+  textDescription.removeEventListener('input', commentHandler);
+  resetForm();
+  inputErrorReset(hashTagsInput);
+  inputErrorReset(textDescription);
+  destroyFilter();
+};
+
+const onUploadEscKeydown = (evt) => {
   if (evt.key === 'Escape' && !evt.target.matches('input[class="text__hashtags"]') && !evt.target.matches('textarea')) {
     evt.preventDefault();
     closeUploadPopup();
   }
-}
+};
+
+const setUserFormSubmit = (onSuccess) => {
+  uploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    sendData(
+      (data) => {
+        if (hashTagsInput.value.length === 0) {
+          inputError(hashTagsInput);
+          hashTagsInput.setCustomValidity('Заполните поле.');
+        }
+        hashTagsInput.reportValidity();
+
+
+        if (hashTagsInput.value.length !== 0) {
+          console.log(data.json());
+          onSuccess();
+        }
+      },
+      () => openErrorMsg(),
+      new FormData(evt.target),
+    );
+  });
+};
 
 const openUploadPopup = () => {
   fileUploadOverlay.classList.remove('hidden');
-
   document.body.classList.add('modal-open');
   document.querySelector('#upload-cancel').addEventListener('click', closeUploadPopup);
   document.addEventListener('keydown', onUploadEscKeydown);
@@ -212,6 +245,10 @@ const openUploadPopup = () => {
   effectsForm.addEventListener('change', effectsHandler);
   hashTagsInput.addEventListener('input', hashTagsHandler);
   textDescription.addEventListener('input', commentHandler);
+  setUserFormSubmit(openSuccessMsg);
+  fileUploadOverlay.querySelector('#effect-none').checked = true;
 };
 
 fileUpload.addEventListener('change', openUploadPopup);
+
+export {closeUploadPopup};

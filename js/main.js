@@ -1,7 +1,14 @@
 import {generatePhotos} from './modules/generate-photos.js';
-import {createPhotos} from './modules/data.js';
+import {getData} from './modules/api.js';
+import {showAlert} from './utils/util.js';
 import './modules/form.js';
 
-const similarPhotos = createPhotos();
-const pictures = document.querySelector('.pictures');
-pictures.appendChild(generatePhotos(similarPhotos));
+getData(
+  (data) => {
+    const pictures = document.querySelector('.pictures');
+    pictures.appendChild(generatePhotos(data));
+  },
+  () => {
+    showAlert('Не удалось получить данные. Попробуйте ещё раз');
+  },
+);

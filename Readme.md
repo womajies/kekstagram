@@ -1,3 +1,4 @@
 # Project «Kekstagram»
 
-* Developer: [https://github.com/womajies/].
+* Developer: [https://github.com/womajies/]
+* Link: [https://womajies.github.io/kekstagram/]

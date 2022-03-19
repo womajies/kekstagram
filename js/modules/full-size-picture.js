@@ -104,4 +104,4 @@ const openPicturePopup = (picture) => {
   document.addEventListener('keydown', onPopupEscKeydown);
 };
 
-export {fullSizePicture, openPicturePopup, closePicturePopup, hiddenCommentCount, hiddenCommentsLoader};
+export { fullSizePicture, openPicturePopup, closePicturePopup, hiddenCommentCount, hiddenCommentsLoader };

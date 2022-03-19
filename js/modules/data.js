@@ -26,21 +26,21 @@ const NAMES = [
 
 const getRandomArrayElement = (array) => array[getRandomPositiveInteger(0, array.length - 1)];
 
-const createComment = () => ({
-  id: getRandomPositiveInteger(0, 2000),
-  avatar: `img/avatar-${getRandomPositiveInteger(1, 6)}.svg`,
-  message: getRandomArrayElement(MESSAGES),
-  name: getRandomArrayElement(NAMES),
-});
+const CreateComment = function() {
+  this.id = getRandomPositiveInteger(0, 2000);
+  this.avatar = `img/avatar-${getRandomPositiveInteger(1, 6)}.svg`;
+  this.message = getRandomArrayElement(MESSAGES);
+  this.name = getRandomArrayElement(NAMES);
+};
 
-const createPhoto = () => ({
-  id: getRandomPositiveInteger(1, SIMILAR_PHOTO_COUNT),
-  url: `photos/${getRandomPositiveInteger(1, SIMILAR_PHOTO_COUNT)}.jpg`,
-  description: getRandomArrayElement(DESCRIPTION),
-  likes: getRandomPositiveInteger(15, 200),
-  comments: new Array(getRandomPositiveInteger(0, COMMENTS_MAX_COUNT)).fill(null).map(() => createComment()),
-});
+const CreatePhoto = function(){
+  this.id = getRandomPositiveInteger(1, SIMILAR_PHOTO_COUNT);
+  this.url = `photos/${getRandomPositiveInteger(1, SIMILAR_PHOTO_COUNT)}.jpg`;
+  this.description = getRandomArrayElement(DESCRIPTION);
+  this.likes = getRandomPositiveInteger(15, 200);
+  this.comments = new Array(getRandomPositiveInteger(0, COMMENTS_MAX_COUNT)).fill(null).map(() => new CreateComment());
+};
 
-const createPhotos = () => new Array(SIMILAR_PHOTO_COUNT).fill(null).map(() => createPhoto());
+const createPhotos = () => new Array(SIMILAR_PHOTO_COUNT).fill(null).map(() => new CreatePhoto());
 
 export {createPhotos, COMMENTS_MAX_COUNT};

@@ -1,5 +1,5 @@
-import {inputError, inputErrorReset, checkSimilarHashTag, destroyFilter, openSuccessMsg, openErrorMsg} from '../utils/util.js';
-import {sendData} from './api.js';
+import { inputError, inputErrorReset, checkSimilarHashTag, destroyFilter, openSuccessMsg, openErrorMsg } from '../utils/util.js';
+import { sendData } from './api.js';
 
 const fileUpload = document.querySelector('#upload-file');
 const uploadForm = document.querySelector('.img-upload__form');
@@ -144,7 +144,7 @@ const hashTagsHandler = () => {
         hashTagsInput.setCustomValidity('Символ "#" (решётка) может быть только первым по счету в хэштеге.');
       } else if (el[0] !== '#' && el.length > 0) {
         hashTagsInput.setCustomValidity('Хэштег должен начинаться с символа # (решётка).');
-      } else if(!el.match(re) && hashTagsInput.value.length > 0) {
+      } else if (!el.match(re) && hashTagsInput.value.length > 0) {
         hashTagsInput.setCustomValidity('Хэштег должен состоять из решётки, букв и чисел.');
       } else {
         hashTagsInput.setCustomValidity('');
@@ -215,7 +215,7 @@ const setUserFormSubmit = (onSuccess) => {
     evt.preventDefault();
 
     sendData(
-      (data) => {
+      () => {
         if (hashTagsInput.value.length === 0) {
           inputError(hashTagsInput);
           hashTagsInput.setCustomValidity('Заполните поле.');
@@ -224,7 +224,6 @@ const setUserFormSubmit = (onSuccess) => {
 
 
         if (hashTagsInput.value.length !== 0) {
-          console.log(data.json());
           onSuccess();
         }
       },
@@ -251,4 +250,4 @@ const openUploadPopup = () => {
 
 fileUpload.addEventListener('change', openUploadPopup);
 
-export {closeUploadPopup};
+export { closeUploadPopup };

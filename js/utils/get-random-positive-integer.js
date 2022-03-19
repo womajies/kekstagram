@@ -24,4 +24,4 @@ function getRandomPositiveInteger(min, max) {
   return Math.floor(result);
 }
 
-export {getRandomPositiveInteger};
+export { getRandomPositiveInteger };
